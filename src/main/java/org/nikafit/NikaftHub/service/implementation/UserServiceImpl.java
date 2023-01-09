@@ -1,6 +1,5 @@
 package org.nikafit.NikaftHub.service.implementation;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.nikafit.NikaftHub.model.User;
@@ -9,6 +8,7 @@ import org.nikafit.NikaftHub.service.UserService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 
 @RequiredArgsConstructor

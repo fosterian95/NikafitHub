@@ -1,12 +1,13 @@
 package org.nikafit.NikaftHub.model;
 
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.nikafit.NikaftHub.enumeration.Position;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Data
