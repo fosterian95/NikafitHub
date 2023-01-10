@@ -39,3 +39,4 @@ build/
 
 ### Including application properties to avoid exposing config info ###
 src/main/resources/application.properties
+!**src/main/resources/application.properties
