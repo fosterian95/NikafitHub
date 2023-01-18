@@ -2,11 +2,9 @@ package org.nikafit.NikaftHub.service.implementation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.nikafit.NikaftHub.enumeration.Position;
 import org.nikafit.NikaftHub.model.User;
 import org.nikafit.NikaftHub.repository.UserRepository;
 import org.nikafit.NikaftHub.service.UserService;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,8 +28,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public Collection<User> list(int limit) throws SQLException {
         log.info("Fetching users");
-//        return userRepository.findAll(PageRequest.of(0, limit)).toList();
-        Statement statement = generateStatement();
+        Connection connection = generateConnection();
+        Statement statement = generateStatement(connection);
         ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
         List<User> users = new ArrayList<>();
         while(resultSet.next()) {
@@ -40,6 +38,7 @@ public class UserServiceImpl implements UserService {
                     resultSet.getString("lastname"),
                     resultSet.getString("position")));
         }
+        closeConnection(connection);
         return users;
     }
 
@@ -62,7 +61,21 @@ public class UserServiceImpl implements UserService {
         return Boolean.TRUE;
     }
 
-    private Statement generateStatement() {
+    private Statement generateStatement(Connection con) {
+        Statement statement;
+
+        {
+            try {
+                statement = con.createStatement();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return statement;
+    }
+
+    private Connection generateConnection() {
         Connection con;
 
         {
@@ -75,17 +88,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        Statement statement;
-
-        {
-            try {
-                statement = con.createStatement();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        return statement;
+        return con;
     }
 
     private void closeConnection(Connection connection) throws SQLException {
