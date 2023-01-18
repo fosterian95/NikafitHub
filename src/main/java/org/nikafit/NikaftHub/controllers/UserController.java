@@ -25,7 +25,7 @@ public class UserController {
         return ResponseEntity.ok(
                 Response.builder().
                         timeStamp(now())
-                        .data(Map.of("users", userService.list(10)))
+                        .data(Map.of("users", userService.listUsers(10)))
                         .message("Users retrieved")
                         .status(HttpStatus.OK)
                         .statusCode(HttpStatus.OK.value())
@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<Response> saveUser(@RequestBody @Valid User user) {
+    public ResponseEntity<Response> saveUser(@RequestBody @Valid User user) throws SQLException {
         return ResponseEntity.ok(
                 Response.builder()
                         .timeStamp(now())
@@ -47,11 +47,11 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<Response> getUser(@PathVariable("id") Long id) {
+    public ResponseEntity<Response> getUser(@PathVariable("id") Long id) throws SQLException {
         return ResponseEntity.ok(
                 Response.builder().
                         timeStamp(now())
-                        .data(Map.of("user", userService.get(id)))
+                        .data(Map.of("user", userService.getUser(id)))
                         .message("User " + id + " retrieved")
                         .status(HttpStatus.OK)
                         .statusCode(HttpStatus.OK.value())
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<Response> deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<Response> deleteUser(@PathVariable("id") Long id) throws SQLException {
         return ResponseEntity.ok(
                 Response.builder().
                         timeStamp(now())

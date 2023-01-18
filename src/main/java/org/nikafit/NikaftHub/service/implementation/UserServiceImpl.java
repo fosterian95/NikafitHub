@@ -20,13 +20,30 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     @Override
-    public User create(User user) {
+    public User create(User user) throws SQLException {
         log.info("Saving new user: {} {}", user.getFirstName(), user.getLastName());
-        return userRepository.save(user);
+        Connection connection = generateConnection();
+        Statement statement = generateStatement(connection);
+        ResultSet resultSet = statement
+                .executeQuery(String.format("INSERT INTO users (firstname, lastname, position) " +
+                                "VALUES ('%s', '%s', '%s')",
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getPosition()));
+        User newUser = new User();
+        while (resultSet.next()) {
+            newUser.setId(resultSet.getLong("id"));
+            newUser.setFirstName(resultSet.getString("firstname"));
+            newUser.setLastName(resultSet.getString("lastname"));
+            newUser.setPosition(resultSet.getString("position"));
+        }
+        closeConnection(connection);
+        return newUser;
+//        return userRepository.save(user);
     }
 
     @Override
-    public Collection<User> list(int limit) throws SQLException {
+    public Collection<User> listUsers(int limit) throws SQLException {
         log.info("Fetching users");
         Connection connection = generateConnection();
         Statement statement = generateStatement(connection);
@@ -43,21 +60,51 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User get(Long id) {
-        log.info("Fetching server be id: {}", id);
-        return userRepository.findById(id).get();
+    public User getUser(Long id) throws SQLException {
+        log.info("Fetching user " + id);
+        Connection connection = generateConnection();
+        Statement statement = generateStatement(connection);
+        ResultSet resultSet = statement
+                .executeQuery("SELECT * FROM users WHERE id = " + id);
+        User user = new User();
+        while(resultSet.next()) {
+            user.setId(resultSet.getLong("id"));
+            user.setFirstName(resultSet.getString("firstname"));
+            user.setLastName(resultSet.getString("lastname"));
+            user.setPosition(resultSet.getString("position"));
+        }
+        closeConnection(connection);
+        return user;
     }
 
     @Override
-    public User update(User user) {
+    public User update(User user) throws SQLException {
         log.info("Updating user: {}", user.getId());
-        return userRepository.save(user);
+        Connection connection = generateConnection();
+        Statement statement = generateStatement(connection);
+        ResultSet resultSet = statement
+                .executeQuery(String.format("UPDATE users SET firstname = '%s', " +
+                        "lastname = '%s', position = '%s' " +
+                        "WHERE id = " + user.getId()));
+        User updatedUser = new User();
+        while(resultSet.next()) {
+            updatedUser.setId(resultSet.getLong("id"));
+            updatedUser.setFirstName(resultSet.getString("firstname"));
+            updatedUser.setLastName(resultSet.getString("lastname"));
+            updatedUser.setPosition(resultSet.getString("position"));
+        };
+        closeConnection(connection);
+        return updatedUser;
+//        return userRepository.save(user);
     }
 
     @Override
-    public Boolean delete(Long id) {
-        log.info("Deleting server: {}", id);
-        userRepository.deleteById(id);
+    public Boolean delete(Long id) throws SQLException {
+        log.info("Deleting user: {}", id);
+        Connection connection = generateConnection();
+        Statement statement = generateStatement(connection);
+        statement.execute(String.format("DELETE FROM users WHERE id='%s'", id));
+//        userRepository.deleteById(id);
         return Boolean.TRUE;
     }
 

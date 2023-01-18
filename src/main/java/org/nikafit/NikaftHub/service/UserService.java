@@ -6,9 +6,9 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 public interface UserService {
-    User create(User user);
-    Collection<User> list(int limit) throws SQLException;
-    User get(Long id);
-    User update(User user);
-    Boolean delete(Long id);
+    User create(User user) throws SQLException;
+    Collection<User> listUsers(int limit) throws SQLException;
+    User getUser(Long id) throws SQLException;
+    User update(User user) throws SQLException;
+    Boolean delete(Long id) throws SQLException;
 }
