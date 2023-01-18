@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.Map;
 
 import static java.time.LocalDateTime.now;
@@ -20,7 +21,7 @@ public class UserController {
     private final UserServiceImpl userService;
 
     @GetMapping("/users")
-    public ResponseEntity<Response> getUsers() {
+    public ResponseEntity<Response> getUsers() throws SQLException {
         return ResponseEntity.ok(
                 Response.builder().
                         timeStamp(now())

@@ -2,6 +2,7 @@ package org.nikafit.NikaftHub.service.implementation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.nikafit.NikaftHub.enumeration.Position;
 import org.nikafit.NikaftHub.model.User;
 import org.nikafit.NikaftHub.repository.UserRepository;
 import org.nikafit.NikaftHub.service.UserService;
@@ -9,7 +10,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -24,9 +28,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Collection<User> list(int limit) {
+    public Collection<User> list(int limit) throws SQLException {
         log.info("Fetching users");
-        return userRepository.findAll(PageRequest.of(0, limit)).toList();
+//        return userRepository.findAll(PageRequest.of(0, limit)).toList();
+        Statement statement = generateStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
+        List<User> users = new ArrayList<>();
+        while(resultSet.next()) {
+            users.add(new User(resultSet.getLong("id"),
+                    resultSet.getString("firstname"),
+                    resultSet.getString("lastname"),
+                    resultSet.getString("position")));
+        }
+        return users;
     }
 
     @Override
@@ -46,5 +60,35 @@ public class UserServiceImpl implements UserService {
         log.info("Deleting server: {}", id);
         userRepository.deleteById(id);
         return Boolean.TRUE;
+    }
+
+    private Statement generateStatement() {
+        Connection con;
+
+        {
+            try {
+                con = DriverManager.getConnection(System.getenv("NIKAFIT_HUB_DATASOURCE_URL"),
+                        System.getenv("NIKAFIT_HUB_DATASOURCE_USERNAME"),
+                        System.getenv("NIKAFIT_HUB_DATASOURCE_PASSWORD"));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        Statement statement;
+
+        {
+            try {
+                statement = con.createStatement();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return statement;
+    }
+
+    private void closeConnection(Connection connection) throws SQLException {
+        connection.close();
     }
 }
