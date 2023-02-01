@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { HttpClient } from '@angular/common/http'
+import { HttpClient,HttpErrorResponse } from '@angular/common/http'
 import { CustomResponse } from '../interface/custom-response';
 import { Observable, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
@@ -41,7 +41,8 @@ export class UserService {
         catchError(this.handleError)
     );
 
-    handleError(handleError: any): Observable<never> {
-        return throwError ('Method not implemented.');
+    private handleError(error: HttpErrorResponse): Observable<never> {
+        console.log(error);
+        return throwError(`Error has occurred - Error code: ${error.status}`);
     }
 }
