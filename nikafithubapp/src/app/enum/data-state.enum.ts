@@ -1,5 +1,5 @@
 export enum DataState {
-    LOADING = 'LOADING',
-    LOADED = 'LOADED',
-    ERROR = 'ERROR'
+    LOADING_STATE = 'LOADING',
+    LOADED_STATE = 'LOADED',
+    ERROR_STATE = 'ERROR'
 }
