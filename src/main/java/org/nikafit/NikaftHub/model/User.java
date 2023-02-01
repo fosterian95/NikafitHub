@@ -13,6 +13,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 public class User {
 
     @Id
@@ -29,7 +30,7 @@ public class User {
 
     @Column
     @NotEmpty(message = "Position cannot be empty or null")
-    private Position position;
+    private String position;
 
     public Long getId() {
         return id;

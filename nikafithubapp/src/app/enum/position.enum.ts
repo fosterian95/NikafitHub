@@ -1,0 +1,7 @@
+export enum Position {
+    JUNIOR_COACH = 'JUNIOR_COACH',
+    SENIOR_COACH = 'SENIOR_COACH',
+    HEAD_COACH = 'HEAD_COACH',
+    SITE_MANAGER = 'SITE_MANAGER',
+    OWNER = 'OWNER'
+}
