@@ -9,7 +9,7 @@ import { User } from '../interface/user';
     providedIn: 'root'
 })
 export class UserService {
-    private readonly apiUrl = 'any';
+    private readonly apiUrl = 'http://localhost:8080';
 
     constructor(private http: HttpClient) {}
 
