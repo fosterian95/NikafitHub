@@ -1,0 +1,39 @@
+<!-- <div>{{ appState$ | async | json }}</div> -->
+
+<div class="container-xl">
+    <div class="table-responsive">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h2>Users</h2>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngIf="(appState$ | async) as appState" [ngSwitch]="appState.dataState">
+                <ng-container *ngSwitchCase="DataState.LOADING_STATE">
+                    <div class="col-md-12" single-note-item text-center>
+                        <div class="spinner-border text-info" role="status"></div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="DataState.LOADED_STATE">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Position</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </ng-container>
+                <ng-container *ngSwitchCase="DataState.ERROR_STATE">
+                    <div class="alert-danger">
+                        error
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+</div>

@@ -16,6 +16,7 @@ public class SecurityConfig {
                 .authenticated()
                 .and()
                 .httpBasic();
+        http.cors();
         return http.build();
     }
 }

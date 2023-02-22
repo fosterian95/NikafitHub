@@ -12,6 +12,9 @@ import { UserService } from './service/user.service';
 })
 export class AppComponent implements OnInit{
   appState$: Observable<AppState<CustomResponse>> | undefined;
+
+  readonly DataState = DataState;
+  
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {

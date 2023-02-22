@@ -15,10 +15,12 @@ import java.util.Map;
 import static java.time.LocalDateTime.now;
 
 @RestController
+@CrossOrigin("http://localhost:4200")
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
     private final UserServiceImpl userService;
+
 
     @GetMapping("/users")
     public ResponseEntity<Response> getUsers() throws SQLException {
